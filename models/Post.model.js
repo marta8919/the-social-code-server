@@ -13,13 +13,10 @@ const postSchema = new Schema({
   tags: {
     type: String
   },
-  hobbies : String,
   picture: {
     type: String,
     default: '../public/images/defaul.png'
   },
-  intro : String,
-  followers: Number,
   datePublished : {
     type: Date,
     default: Date.now,
@@ -34,13 +31,11 @@ const postSchema = new Schema({
   likes : Number,
   postStatus: {
     type: String,
-    default: 'draft',
-    required: true
+    default: 'draft'
   },
   postType: {
     type: String,
-    default: 'post',
-    required: true
+    default: 'post'
   },
   comments: String
 });
