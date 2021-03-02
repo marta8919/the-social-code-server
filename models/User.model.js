@@ -4,9 +4,39 @@ const { Schema, model } = require("mongoose");
 const userSchema = new Schema({
   username: {
     type: String,
-    unique: true
+    unique: true,
+    required : true
   },
-  password: String
+  email : {
+    type: String,
+    unique: true,
+    required : true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: false
+  },
+  country : {
+    type: String,
+    required : false
+  },
+  hobbies : String,
+  picture: {
+    type: String,
+    default: '../public/images/defaul.png'
+  },
+  intro : String,
+  followers: Number,
+  dateRegistered : {
+    type: Date,
+    default: Date.now,
+    required: true
+  },
+  dateString: String,
 });
 
 const User = model("User", userSchema);
