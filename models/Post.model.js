@@ -4,7 +4,6 @@ const { Schema, model } = require("mongoose");
 const postSchema = new Schema({
   title: {
     type: String,
-    required: true
   },
   description: {
     type: String,
@@ -20,13 +19,13 @@ const postSchema = new Schema({
   datePublished : {
     type: Date,
     default: Date.now,
-    required: true
+    //required: true
   },
   dateString: String,
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true
+    //required: true
   },
   likes : Number,
   postStatus: {

@@ -50,7 +50,7 @@ router.post('/new-draft', (req, res) => {
   return;  
   }
 
-  PostModel.create({title, description, tags, picture, postType: 'article'})
+  PostModel.create({title, description, tags, picture, postType: 'article',userId: req.session.loggedInUser._id })
         .then((response) => {
              res.status(200).json(response)
         })
@@ -88,14 +88,14 @@ router.patch('/:id/edit-article', (req, res) => {
 router.post('/publish', (req, res) => {  
   const {title, description, tags, picture, postType} = req.body;
   
-  if(!title || !description) {
+  if(!description) {
     res.status(500).json({
-        error: 'Please enter Username. email and password',
+        errorMessage: 'Please write your post',
    })
   return;  
   }
 
-  PostModel.create({title, description, tags, picture, postStatus: 'published', postType})
+  PostModel.create({title, description, tags, picture, postStatus: 'published', postType, userId: req.session.loggedInUser._id})
         .then((response) => {
              res.status(200).json(response)
         })

@@ -30,7 +30,7 @@ app.use(session({
       maxAge: 1000*60*60*24// is in milliseconds.  expiring in 1 day
     },
     store: new MongoStore({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/ReactTodos",
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/the-social-code",
       ttl: 60*60*24, // is in seconds. expiring in 1 day
     })
 }));
