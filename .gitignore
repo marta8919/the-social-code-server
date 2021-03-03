@@ -7,8 +7,17 @@ npm-debug.log
 # Environment Variables should NEVER be published
 .env
 
+<<<<<<< HEAD
 package-lock.json
 
 launch.json
 
 settings.json
+=======
+#package-lock
+package-lock.json
+
+#config vscode
+launch.json
+settings.json
+>>>>>>> origin/sofia
