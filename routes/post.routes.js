@@ -129,6 +129,7 @@ router.get('/getpost', (req, res, next)=>{
      PostModel.find({userId: req.session.loggedInUser._id})
       .populate('userId')
       .then((response)=>{
+           console.log("hello")
             res.status(200).json(response)
        })
        .catch((err)=> {

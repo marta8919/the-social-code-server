@@ -142,7 +142,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 // Protected routes
-router.get("/profile", isLoggedIn, (req, res, next) => {
+router.get("/profile", (req, res, next) => {
 
   console.log("I am fine")
   

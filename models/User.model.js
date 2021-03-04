@@ -27,7 +27,7 @@ const userSchema = new Schema({
   hobbies : String,
   picture: {
     type: String,
-    default: '../public/images/defaul.png'
+    default: "../public/images/example.png"
   },
   intro : String,
   followers: Number,
