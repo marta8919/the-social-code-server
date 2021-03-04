@@ -142,25 +142,16 @@ const isLoggedIn = (req, res, next) => {
 };
 
 // Protected routes
-router.get("/profile", isLoggedIn, (req, res, next) => {
+router.get("/profile", (req, res) => {
 
-  console.log("I am fine")
-  
-  res.status(200).json(req.session.loggedInUser);  
-
-  //    PostModel.find({userId: req.session.loggedInUser._id})
-  //     .populate('userId')
-  //     .then((response)=>{
-  //           res.status(200).json(response)
-  //      })
-  //      .catch((err)=> {
-  //           res.status(500).json({
-  //                error: 'Something went wrong',
-  //                message: err,
-  //                loggedInUser: req.session.loggedInUser
-  //           })
-  //  })
-
+  // if(req.session.loggedInUser){
+    res.status(200).json(req.session.loggedInUser);  
+  // }
+  // else{
+  //   res.status(500).json({
+  //     error: "Something went wrong",
+  //   });
+  // }
 });
 
 

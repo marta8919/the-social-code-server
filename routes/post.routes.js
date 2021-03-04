@@ -124,18 +124,18 @@ router.post("/publish", (req, res) => {
 
 router.get('/getpost', (req, res, next)=>{
 
-     console.log(req.session.loggedInUser)
+     let user = req.session.loggedInUser
 
-     PostModel.find({userId: req.session.loggedInUser._id})
+     PostModel.find({userId: user._id})
       .populate('userId')
       .then((response)=>{
             res.status(200).json(response)
        })
        .catch((err)=> {
+            console.log(err)
             res.status(500).json({
                  error: 'Something went wrong',
                  message: err,
-                 loggedInUser: req.session.loggedInUser
             })
    })
 })
