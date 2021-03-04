@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const UserModel = require('../models/User.model.js')
 
-router.get('/:userId', (req, res) => {
+router.get('/user/:userId', (req, res) => {
   UserModel.findById(req.params.userId)
    .then((response) => {
         res.status(200).json(response)
