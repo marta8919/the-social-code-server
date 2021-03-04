@@ -2,8 +2,13 @@ const router = require("express").Router();
 const PostModel = require("../models/Post.model.js");
 
 router.get("/board", (req, res, next) => {
-  PostModel.find()
+  PostModel.find().populate('userId')
     .then((response) => {
+      // response.forEach((elem)=>{
+      //   let month = elem.dateRegister.toDateString().split(' ')[1]
+      //   let year = elem.dateRegister.toDateString().split(' ')[3]
+      //   elem.dateString = `${month} ${year}`
+      // })
       res.status(200).json(response);
     })
     .catch((err) => {

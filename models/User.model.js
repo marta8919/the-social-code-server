@@ -37,10 +37,6 @@ const userSchema = new Schema({
     required: true
   },
   dateString: String,
-  picture: {
-    type: String,
-    default: "/images/baseProfile.png"
-  },
 });
 
 const User = model("User", userSchema);
