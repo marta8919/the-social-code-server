@@ -22,7 +22,7 @@ const userSchema = new Schema({
   },
   country : {
     type: String,
-    required : false
+    required : false    
   },
   hobbies : String,
   picture: {
@@ -37,6 +37,10 @@ const userSchema = new Schema({
     required: true
   },
   dateString: String,
+  picture: {
+    type: String,
+    default: "/images/baseProfile.png"
+  },
 });
 
 const User = model("User", userSchema);
