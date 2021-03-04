@@ -50,7 +50,7 @@ router.post('/new-draft', (req, res) => {
   return;  
   }
 
-  PostModel.create({title, description, tags, picture, postType: 'article',userId: req.session.loggedInUser._id })
+  PostModel.create({title, description, tags, picture, postType: 'article', userId: req.session.loggedInUser._id })
         .then((response) => {
              res.status(200).json(response)
         })
