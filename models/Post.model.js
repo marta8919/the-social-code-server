@@ -9,6 +9,9 @@ const postSchema = new Schema({
     type: String,
     required: true
   },
+  code: {
+    type: String,
+  },
   tags: {
     type: String
   },
