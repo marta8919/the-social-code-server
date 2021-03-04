@@ -27,7 +27,7 @@ const userSchema = new Schema({
   hobbies : String,
   picture: {
     type: String,
-    default: "../public/images/example.png"
+    default: "https://res.cloudinary.com/martacloud/image/upload/v1614876843/Humaaans_-_2_Characters_xscl0v.png"
   },
   intro : String,
   followers: Number,
@@ -37,10 +37,6 @@ const userSchema = new Schema({
     required: true
   },
   dateString: String,
-  picture: {
-    type: String,
-    default: "/images/baseProfile.png"
-  },
 });
 
 const User = model("User", userSchema);

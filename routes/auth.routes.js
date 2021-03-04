@@ -4,7 +4,7 @@ const UserModel = require('../models/User.model.js')
 const PostModel = require('../models/Post.model')
 
 router.post('/signup', (req, res, next) => {
-  const {username, email, password, password2} = req.body
+  const {username, email, password, password2, country, city, hobbies, intro} = req.body
 
   if (!username || !email || !password || !password2) {
     res.status(500)
@@ -38,7 +38,7 @@ router.post('/signup', (req, res, next) => {
   // creating a salt 
   let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(password, salt);
-  UserModel.create({username: username.toLowerCase(), email, password: hash})
+  UserModel.create({username: username.toLowerCase(), email, password: hash, city, country, intro, hobbies})
     .then((user) => {
       // ensuring that we don't share the hash as well with the user
       user.password = "***";

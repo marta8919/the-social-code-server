@@ -93,6 +93,7 @@ router.patch("/edit-article/:id", (req, res) => {
 });
 
 router.post("/publish", (req, res) => {
+     console.log("publish working")
   const { title, description, tags, picture, postType } = req.body;
 
   if (!description) {

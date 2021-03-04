@@ -17,7 +17,7 @@ const postSchema = new Schema({
   },
   picture: {
     type: String,
-    default: '../public/images/defaul.png'
+    default: '../public/images/example.png'
   },
   datePublished : {
     type: Date,
