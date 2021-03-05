@@ -33,7 +33,7 @@ router.get("/post/:postId", (req, res) => {
 });
 
 router.delete("/delete/:postId", (req, res) => {
-  TodoModel.findByIdAndDelete(req.params.postId)
+  PostModel.findByIdAndDelete(req.params.postId)
     .then((response) => {
       res.status(200).json(response);
     })
@@ -46,7 +46,7 @@ router.delete("/delete/:postId", (req, res) => {
 });
 
 router.post("/new-draft", (req, res) => {
-  const { title, description, tags, picture } = req.body;
+  const { title, description, code, tags, picture } = req.body;
 
   if (!title || !description) {
     res.status(500).json({
@@ -58,6 +58,7 @@ router.post("/new-draft", (req, res) => {
   PostModel.create({
     title,
     description,
+    code,
     tags,
     picture,
     postType: "article",
@@ -76,7 +77,7 @@ router.post("/new-draft", (req, res) => {
 
 router.patch("/edit-article/:id", (req, res) => {
   let id = req.params.id;
-  const { title, description, tags, picture } = req.body;
+  const { title, description, code, tags, picture } = req.body;
 
   if (!title || !description) {
     res.status(500).json({
@@ -85,7 +86,7 @@ router.patch("/edit-article/:id", (req, res) => {
     return;
   }
 
-  PostModel.findByIdAndUpdate(id, { title, description, tags, picture })
+  PostModel.findByIdAndUpdate(id, { title, description, code, tags, picture })
     .then((response) => {
       res.status(200).json(response);
     })
@@ -99,7 +100,7 @@ router.patch("/edit-article/:id", (req, res) => {
 
 router.post("/publish", (req, res) => {
      console.log("publish working")
-  const { title, description, tags, picture, postType } = req.body;
+  const { title, description, code, tags, picture, postType } = req.body;
 
   if (!description) {
     res.status(500).json({
@@ -111,6 +112,7 @@ router.post("/publish", (req, res) => {
   PostModel.create({
     title,
     description,
+    code,
     tags,
     picture,
     postStatus: "published",
