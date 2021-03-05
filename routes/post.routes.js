@@ -98,7 +98,7 @@ router.patch("/edit-article/:id", (req, res) => {
 });
 
 router.post("/publish", (req, res) => {
-     console.log("publish working")
+  console.log("publish working")
   const { title, description, tags, picture, postType } = req.body;
 
   if (!description) {
@@ -121,10 +121,11 @@ router.post("/publish", (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json({
-        error: "Something went wrong",
-        message: err,
-      });
+      console.log(err)
+      // res.status(500).json({
+      //   error: "Something went wrong",
+      //   message: err,
+      // });
     });
 });
 

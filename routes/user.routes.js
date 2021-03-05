@@ -14,4 +14,22 @@ router.get('/user/:userId', (req, res) => {
    }) 
 })
 
+router.patch('/profile/edit', (req,res,next)=>{
+
+     let email = req.session.loggedInUser.email
+
+     const {country, city, hobbies, intro} = req.body
+
+     UserModel.findOneAndUpdate({email: email}, {country, city, hobbies, intro}, {new: true})
+      .then((response)=>{
+           res.status(200).json(response)
+      })
+      .catch((err)=>{
+           res.status(500).json({
+                error: 'Something went wrong editting profile',
+                message: err
+           })
+      })
+})
+
 module.exports = router;
