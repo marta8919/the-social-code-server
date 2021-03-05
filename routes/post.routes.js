@@ -1,8 +1,11 @@
 const router = require("express").Router();
 const PostModel = require("../models/Post.model.js");
+const uploader = require("../utils/cloudinary.config");
+const UserModel = require("../models/User.model");
 
 router.get("/board", (req, res, next) => {
-  PostModel.find().populate('userId')
+  PostModel.find()
+    .populate("userId")
     .then((response) => {
       // response.forEach((elem)=>{
       //   let month = elem.dateRegister.toDateString().split(' ')[1]
@@ -33,7 +36,7 @@ router.get("/post/:postId", (req, res) => {
 });
 
 router.delete("/delete/:postId", (req, res) => {
-  TodoModel.findByIdAndDelete(req.params.postId)
+  PostModel.findByIdAndDelete(req.params.postId)
     .then((response) => {
       res.status(200).json(response);
     })
@@ -46,7 +49,7 @@ router.delete("/delete/:postId", (req, res) => {
 });
 
 router.post("/new-draft", (req, res) => {
-  const { title, description, tags, picture } = req.body;
+  const { title, description, code, tags, picture } = req.body;
 
   if (!title || !description) {
     res.status(500).json({
@@ -58,6 +61,7 @@ router.post("/new-draft", (req, res) => {
   PostModel.create({
     title,
     description,
+    code,
     tags,
     picture,
     postType: "article",
@@ -76,7 +80,7 @@ router.post("/new-draft", (req, res) => {
 
 router.patch("/edit-article/:id", (req, res) => {
   let id = req.params.id;
-  const { title, description, tags, picture } = req.body;
+  const { title, description, code, tags, picture } = req.body;
 
   if (!title || !description) {
     res.status(500).json({
@@ -85,7 +89,7 @@ router.patch("/edit-article/:id", (req, res) => {
     return;
   }
 
-  PostModel.findByIdAndUpdate(id, { title, description, tags, picture })
+  PostModel.findByIdAndUpdate(id, { title, description, code, tags, picture })
     .then((response) => {
       res.status(200).json(response);
     })
@@ -98,8 +102,8 @@ router.patch("/edit-article/:id", (req, res) => {
 });
 
 router.post("/publish", (req, res) => {
-  console.log("publish working")
-  const { title, description, tags, picture, postType } = req.body;
+  console.log("publish working");
+  const { title, description, code, tags, picture, postType } = req.body;
 
   if (!description) {
     res.status(500).json({
@@ -111,6 +115,7 @@ router.post("/publish", (req, res) => {
   PostModel.create({
     title,
     description,
+    code,
     tags,
     picture,
     postStatus: "published",
@@ -121,7 +126,7 @@ router.post("/publish", (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       // res.status(500).json({
       //   error: "Something went wrong",
       //   message: err,
@@ -129,23 +134,47 @@ router.post("/publish", (req, res) => {
     });
 });
 
-router.get('/getpost', (req, res, next)=>{
+router.get("/getpost", (req, res, next) => {
+  let user = req.session.loggedInUser;
 
-     let user = req.session.loggedInUser
+  PostModel.find({ userId: user._id })
+    .populate("userId")
+    .then((response) => {
+      console.log("hello");
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: "Something went wrong",
+        message: err,
+      });
+    });
+});
 
-     PostModel.find({userId: user._id})
-      .populate('userId')
-      .then((response)=>{
-           console.log("hello")
-            res.status(200).json(response)
-       })
-       .catch((err)=> {
-            console.log(err)
-            res.status(500).json({
-                 error: 'Something went wrong',
-                 message: err,
-            })
-   })
-})
+router.post("/profile/upload", uploader.single("imageUrl"), (req, res, next) => {
+
+  let picturePath = "" ;
+  (req.file) ? picturePath = req.file.path : picturePath = "https://res.cloudinary.com/martacloud/image/upload/v1614876843/Humaaans_-_2_Characters_xscl0v.png"
+
+  let editedUser = {
+    picture: picturePath
+  };
+
+  UserModel.findOneAndUpdate(
+    { email: req.session.loggedInUser.email },
+    editedUser,
+    { new: true })
+
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: "Something went wrong editting profile",
+        message: err,
+      });
+    });
+});
 
 module.exports = router;
