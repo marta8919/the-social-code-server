@@ -144,6 +144,19 @@ const isLoggedIn = (req, res, next) => {
 // Protected routes
 router.get("/profile", (req, res) => {
 
+  // let user = req.session.loggedInUser
+
+  // UserModel.find({userId: user._id})
+  //  .then((response)=>{
+  //    res.status(200).json(response)
+  //  })
+  //  .catch((err)=>{
+  //    res.status(500).json({
+  //      error:"Something went wrong",
+  //      message: err
+  //    })
+  //  })
+
   // if(req.session.loggedInUser){
     res.status(200).json(req.session.loggedInUser);  
   // }

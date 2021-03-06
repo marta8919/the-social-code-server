@@ -23,6 +23,7 @@ router.patch('/profile/edit', (req,res,next)=>{
      UserModel.findOneAndUpdate({email: email}, {country, city, hobbies, intro}, {new: true})
       .then((response)=>{
            res.status(200).json(response)
+           console.log("editted successfully")
       })
       .catch((err)=>{
            res.status(500).json({

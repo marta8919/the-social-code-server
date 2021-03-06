@@ -2,16 +2,13 @@ const router = require("express").Router();
 const PostModel = require("../models/Post.model.js");
 const uploader = require("../utils/cloudinary.config");
 const UserModel = require("../models/User.model");
+const EventsModel = require("../models/Events.model");
+
 
 router.get("/board", (req, res, next) => {
   PostModel.find()
     .populate("userId")
     .then((response) => {
-      // response.forEach((elem)=>{
-      //   let month = elem.dateRegister.toDateString().split(' ')[1]
-      //   let year = elem.dateRegister.toDateString().split(' ')[3]
-      //   elem.dateString = `${month} ${year}`
-      // })
       res.status(200).json(response);
     })
     .catch((err) => {
@@ -48,35 +45,6 @@ router.delete("/delete/:postId", (req, res) => {
     });
 });
 
-// router.post("/new-draft", (req, res) => {
-//   const { title, description, code, tags, picture } = req.body;
-
-//   if (!title || !description) {
-//     res.status(500).json({
-//       error: "Please enter title and description",
-//     });
-//     return;
-//   }
-
-//   PostModel.create({
-//     title,
-//     description,
-//     code,
-//     tags,
-//     picture,
-//     postType: "article",
-//     userId: req.session.loggedInUser._id,
-//   })
-//     .then((response) => {
-//       res.status(200).json(response);
-//     })
-//     .catch((err) => {
-//       res.status(500).json({
-//         error: "Something went wrong",
-//         message: err,
-//       });
-//     });
-// });
 
 router.patch("/event/edit/:id", (req, res) => {
   let id = req.params.id;
@@ -90,7 +58,7 @@ router.patch("/event/edit/:id", (req, res) => {
     return;
   }
 
-  PostModel.findByIdAndUpdate(id, {
+  EventsModel.findByIdAndUpdate(id, {
     title,
     description,
     tags,
@@ -110,7 +78,7 @@ router.patch("/event/edit/:id", (req, res) => {
 });
 
 router.post("/publish", (req, res) => {
-  const { title, description, code, tags, picture, postType } = req.body;
+  const {description, tags, picture } = req.body;
 
   if (!description) {
     res.status(500).json({
@@ -120,13 +88,10 @@ router.post("/publish", (req, res) => {
   }
 
   PostModel.create({
-    title,
     description,
-    code,
     tags,
     picture,
     postStatus: "published",
-    postType,
     userId: req.session.loggedInUser._id,
   })
     .then((response) => {
@@ -141,15 +106,8 @@ router.post("/publish", (req, res) => {
 });
 
 router.post("/event/publish", (req, res) => {
-  const {
-    title,
-    description,
-    tags,
-    picture,
-    dateEvent,
-    hours,
-    minutes,
-  } = req.body;
+
+  const { title, description, code, tags, picture, postType } = req.body;
 
   if (!description || !title || !dateEvent | !hours || !minutes) {
     res.status(500).json({
@@ -159,7 +117,7 @@ router.post("/event/publish", (req, res) => {
     return;
   }
 
-  PostModel.create({
+  EventsModel.create({
     title,
     description,
     tags,
@@ -211,13 +169,17 @@ router.post("/profile/upload", uploader.single("imageUrl"), (req, res, next) => 
 
   UserModel.findOneAndUpdate(
     { email: req.session.loggedInUser.email },
-    editedUser, { new: true })
+    editedUser,
+    { new: true })
 
     .then((response) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json({ error: "Something went wrong editting profile"});
+      res.status(500).json({
+        error: "Something went wrong editting profile",
+        message: err,
+      });
     });
   });
 
