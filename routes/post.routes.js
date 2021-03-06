@@ -48,24 +48,55 @@ router.delete("/delete/:postId", (req, res) => {
     });
 });
 
-router.post("/new-draft", (req, res) => {
-  const { title, description, code, tags, picture } = req.body;
+// router.post("/new-draft", (req, res) => {
+//   const { title, description, code, tags, picture } = req.body;
 
-  if (!title || !description) {
+//   if (!title || !description) {
+//     res.status(500).json({
+//       error: "Please enter title and description",
+//     });
+//     return;
+//   }
+
+//   PostModel.create({
+//     title,
+//     description,
+//     code,
+//     tags,
+//     picture,
+//     postType: "article",
+//     userId: req.session.loggedInUser._id,
+//   })
+//     .then((response) => {
+//       res.status(200).json(response);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({
+//         error: "Something went wrong",
+//         message: err,
+//       });
+//     });
+// });
+
+router.patch("/event/edit/:id", (req, res) => {
+  let id = req.params.id;
+  const { title, description, tags, dateEvent, hours, minutes } = req.body;
+
+  if (!description || !title || !dateEvent | !hours || !minutes) {
     res.status(500).json({
-      error: "Please enter title and description",
+      errorMessage:
+        "Hey there coder! Looks like you forgot to fill in all required fields!",
     });
     return;
   }
 
-  PostModel.create({
+  PostModel.findByIdAndUpdate(id, {
     title,
     description,
-    code,
     tags,
-    picture,
-    postType: "article",
-    userId: req.session.loggedInUser._id,
+    dateEvent,
+    hours,
+    minutes,
   })
     .then((response) => {
       res.status(200).json(response);
@@ -78,31 +109,7 @@ router.post("/new-draft", (req, res) => {
     });
 });
 
-router.patch("/edit-article/:id", (req, res) => {
-  let id = req.params.id;
-  const { title, description, code, tags, picture } = req.body;
-
-  if (!title || !description) {
-    res.status(500).json({
-      error: "Please enter title and description",
-    });
-    return;
-  }
-
-  PostModel.findByIdAndUpdate(id, { title, description, code, tags, picture })
-    .then((response) => {
-      res.status(200).json(response);
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: "Something went wrong",
-        message: err,
-      });
-    });
-});
-
 router.post("/publish", (req, res) => {
-  console.log("publish working");
   const { title, description, code, tags, picture, postType } = req.body;
 
   if (!description) {
@@ -120,6 +127,47 @@ router.post("/publish", (req, res) => {
     picture,
     postStatus: "published",
     postType,
+    userId: req.session.loggedInUser._id,
+  })
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+router.post("/event/publish", (req, res) => {
+  const {
+    title,
+    description,
+    tags,
+    picture,
+    dateEvent,
+    hours,
+    minutes,
+  } = req.body;
+
+  if (!description || !title || !dateEvent | !hours || !minutes) {
+    res.status(500).json({
+      errorMessage:
+        "Hey there coder! Looks like you forgot to fill in all required fields!",
+    });
+    return;
+  }
+
+  PostModel.create({
+    title,
+    description,
+    tags,
+    picture,
+    postStatus: "published",
+    dateEvent,
+    hours,
+    minutes,
     userId: req.session.loggedInUser._id,
   })
     .then((response) => {
@@ -155,7 +203,7 @@ router.get("/getpost", (req, res, next) => {
 router.post("/profile/upload", uploader.single("imageUrl"), (req, res, next) => {
 
   let picturePath = "" ;
-  (req.file) ? picturePath = req.file.path : picturePath = "https://res.cloudinary.com/martacloud/image/upload/v1614876843/Humaaans_-_2_Characters_xscl0v.png"
+  req.file ? picturePath = req.file.path : picturePath = "https://res.cloudinary.com/martacloud/image/upload/v1614876843/Humaaans_-_2_Characters_xscl0v.png"
 
   let editedUser = {
     picture: picturePath
@@ -163,18 +211,15 @@ router.post("/profile/upload", uploader.single("imageUrl"), (req, res, next) => 
 
   UserModel.findOneAndUpdate(
     { email: req.session.loggedInUser.email },
-    editedUser,
-    { new: true })
+    editedUser, { new: true })
 
     .then((response) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json({
-        error: "Something went wrong editting profile",
-        message: err,
-      });
+      res.status(500).json({ error: "Something went wrong editting profile"});
     });
-});
+  });
+
 
 module.exports = router;
