@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const PostModel = require("../models/Post.model.js");
-const uploader = require("../utils/cloudinary.config");
-const UserModel = require("../models/User.model");
+
 const EventsModel = require("../models/Events.model");
 
 

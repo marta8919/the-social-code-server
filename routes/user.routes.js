@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const UserModel = require("../models/User.model.js");
+const uploader = require("../utils/cloudinary.config");
+const UserModel = require("../models/User.model");
 
 router.get("/user/:userId", (req, res) => {
   UserModel.findById(req.params.userId)
