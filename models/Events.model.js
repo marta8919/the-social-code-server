@@ -29,10 +29,6 @@ const EventSchema = new Schema({
     type: String,
     required: true
   },
-  postStatus: {
-    type: String,
-    default: 'draft'
-  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',

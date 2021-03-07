@@ -3,8 +3,8 @@ const PostModel = require("../models/Post.model.js");
 
 const EventsModel = require("../models/Events.model");
 
-
-router.get("/board", (req, res, next) => {
+//Update Board
+router.get("/board/posts", (req, res, next) => {
   PostModel.find()
     .populate("userId")
     .then((response) => {
@@ -18,6 +18,21 @@ router.get("/board", (req, res, next) => {
     });
 });
 
+router.get("/board/events", (req, res, next) => {
+  EventsModel.find()
+    .populate("userId")
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+//Get post details
 router.get("/post/:postId", (req, res) => {
   PostModel.findById(req.params.postId)
     .then((response) => {
@@ -44,6 +59,19 @@ router.delete("/delete/:postId", (req, res) => {
     });
 });
 
+//Get Event Details
+router.get('/event/:eventId', (req, res) => {
+  EventsModel.findById(req.params.eventId)
+   .then((response) => {
+        res.status(200).json(response)
+   })
+   .catch((err) => {
+        res.status(500).json({
+             error: 'Something went wrong',
+             message: err
+        })
+   }) 
+})
 
 //Edit Events
 router.patch("/event/edit/:id", (req, res) => {
