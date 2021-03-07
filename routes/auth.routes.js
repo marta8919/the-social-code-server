@@ -9,28 +9,28 @@ router.post('/signup', (req, res, next) => {
   if (!username || !email || !password || !password2) {
     res.status(500)
       .json({
-        errorMessage: 'Please enter username, email and password'
+        errorMessage: 'Hey Coder! Please enter username, email and password'
       });
     return;  
   }
   const myRegex = new RegExp(/^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/);
   if (!myRegex.test(email)) {
       res.status(500).json({
-        errorMessage: 'Email format not correct'
+        errorMessage: 'Oups! Our Regex said that your email format not correct'
       });
       return;  
   }
   const myPassRegex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/);
   if (!myPassRegex.test(password)) {
     res.status(500).json({
-      errorMessage: 'Password needs to have 8 characters, a number and an Uppercase alphabet'
+      errorMessage: 'Oups! Our Regex said that Password needs to have 8 characters, a number and an Uppercase alphabet'
     });
     return;  
   }
 
   if(password != password2) {
     res.status(500).json({
-      errorMessage: 'Passwords do not match'
+      errorMessage: 'Oups! Passwords do not match'
     });
     return;  
   }
@@ -48,13 +48,11 @@ router.post('/signup', (req, res, next) => {
       if (err.code === 11000) {
         res.status(500).json({
           errorMessage: 'username or email entered already exists!',
-          message: err,
         });
       } 
       else {
         res.status(500).json({
           errorMessage: 'Something went wrong! Go to sleep!',
-          message: err,
         });
       }
     })
@@ -113,7 +111,6 @@ router.post('/signin', (req, res) => {
     .catch((err) => {
       res.status(500).json({
           errorMessage: 'Email does not exist',
-          message: err
       })
       return;  
     });

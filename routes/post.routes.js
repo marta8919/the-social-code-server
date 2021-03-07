@@ -78,6 +78,7 @@ router.patch("/event/edit/:id", (req, res) => {
 });
 
 router.post("/publish", (req, res) => {
+  
   const {description, tags, picture } = req.body;
 
   if (!description) {
