@@ -13,19 +13,14 @@ const EventSchema = new Schema({
   tags: {
     type: String
   },
-  picture: {
+  link: {
     type: String,
-    default: '../public/images/example.png'
+    default: "",
   },
-  datePublished : {
+  dateOriginal : {
     type: Date,
-    default: Date.now,
   },
   dateString: String,
-  dateEvent: {
-    type: String,
-    required: true
-  },
   hours: {
     type: String,
     required: true

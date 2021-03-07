@@ -13,7 +13,7 @@ router.get("/board", (req, res, next) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
@@ -26,7 +26,7 @@ router.get("/post/:postId", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
@@ -39,21 +39,21 @@ router.delete("/delete/:postId", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
 });
 
 
+//Edit Events
 router.patch("/event/edit/:id", (req, res) => {
   let id = req.params.id;
-  const { title, description, tags, dateEvent, hours, minutes } = req.body;
+  const { title, description, link, tags, dateOriginal, dateString, hours, minutes  } = req.body;
 
-  if (!description || !title || !dateEvent | !hours || !minutes) {
+  if (!title || !description || !dateOriginal | !hours || !minutes) {
     res.status(500).json({
-      errorMessage:
-        "Hey there coder! Looks like you forgot to fill in all required fields!",
+      errorMessage: "Hey there coder! Looks like you forgot to fill in all required fields!",
     });
     return;
   }
@@ -62,7 +62,9 @@ router.patch("/event/edit/:id", (req, res) => {
     title,
     description,
     tags,
-    dateEvent,
+    link,
+    dateOriginal,
+    dateString,
     hours,
     minutes,
   })
@@ -71,12 +73,26 @@ router.patch("/event/edit/:id", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
 });
 
+router.delete("/event/delete/:eventId", (req, res) => {
+  EventsModel.findByIdAndDelete(req.params.eventId)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+//Publish routes
 router.post("/publish", (req, res) => {
   
   const {description, tags, picture } = req.body;
@@ -100,7 +116,7 @@ router.post("/publish", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
@@ -108,12 +124,11 @@ router.post("/publish", (req, res) => {
 
 router.post("/event/publish", (req, res) => {
 
-  const { title, description, code, tags, picture, postType } = req.body;
+  const { title, description, link, tags, dateOriginal, dateString, hours, minutes  } = req.body;
 
-  if (!description || !title || !dateEvent | !hours || !minutes) {
+  if (!title || !description || !dateOriginal | !hours || !minutes) {
     res.status(500).json({
-      errorMessage:
-        "Hey there coder! Looks like you forgot to fill in all required fields!",
+      errorMessage: "Hey there coder! Looks like you forgot to fill in all required fields!",
     });
     return;
   }
@@ -122,9 +137,9 @@ router.post("/event/publish", (req, res) => {
     title,
     description,
     tags,
-    picture,
-    postStatus: "published",
-    dateEvent,
+    link,
+    dateOriginal,
+    dateString,
     hours,
     minutes,
     userId: req.session.loggedInUser._id,
@@ -133,14 +148,13 @@ router.post("/event/publish", (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      console.log(err);
-      // res.status(500).json({
-      //   error: "Something went wrong",
-      //   message: err,
-      // });
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+      });
     });
 });
 
+//Routes to get info for Profile page
 router.get("/getpost", (req, res, next) => {
   let user = req.session.loggedInUser;
 
@@ -153,36 +167,30 @@ router.get("/getpost", (req, res, next) => {
     .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: "Something went wrong",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
 });
 
-router.post("/profile/upload", uploader.single("imageUrl"), (req, res, next) => {
+router.get("/getevent", (req, res, next) => {
+  let user = req.session.loggedInUser;
 
-  let picturePath = "" ;
-  req.file ? picturePath = req.file.path : picturePath = "https://res.cloudinary.com/martacloud/image/upload/v1614876843/Humaaans_-_2_Characters_xscl0v.png"
-
-  let editedUser = {
-    picture: picturePath
-  };
-
-  UserModel.findOneAndUpdate(
-    { email: req.session.loggedInUser.email },
-    editedUser,
-    { new: true })
-
+  EventsModel.find({ userId: user._id })
+    .populate("userId")
     .then((response) => {
+      console.log("hello");
       res.status(200).json(response);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
-        error: "Something went wrong editting profile",
+        errorMessage: "Something went wrong",
         message: err,
       });
     });
-  });
+});
+
 
 
 module.exports = router;
