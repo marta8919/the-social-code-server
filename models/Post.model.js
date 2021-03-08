@@ -13,7 +13,8 @@ const postSchema = new Schema({
     type: String,
   },
   tags: {
-    type: String
+    type: String,
+    default:""
   },
   picture: {
     type: String,

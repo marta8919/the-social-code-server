@@ -11,7 +11,8 @@ const EventSchema = new Schema({
     required: true
   },
   tags: {
-    type: String
+    type: String,
+    default:""
   },
   link: {
     type: String,
