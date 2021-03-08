@@ -76,9 +76,9 @@ router.get('/event/:eventId', (req, res) => {
 //Edit Events
 router.patch("/event/edit/:id", (req, res) => {
   let id = req.params.id;
-  const { title, description, link, tags, dateOriginal, dateString, hours, minutes  } = req.body;
+  const { title, description, link, tags  } = req.body;
 
-  if (!title || !description || !dateOriginal | !hours || !minutes) {
+  if (!title || !description) {
     res.status(500).json({
       errorMessage: "Hey there coder! Looks like you forgot to fill in all required fields!",
     });
@@ -89,11 +89,7 @@ router.patch("/event/edit/:id", (req, res) => {
     title,
     description,
     tags,
-    link,
-    dateOriginal,
-    dateString,
-    hours,
-    minutes,
+    link
   })
     .then((response) => {
       res.status(200).json(response);
