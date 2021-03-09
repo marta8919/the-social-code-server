@@ -181,7 +181,6 @@ router.post("/publish", (req, res) => {
   let date = new Date()
   let currentDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 
-
   PostModel.create({
     description,
     tags,

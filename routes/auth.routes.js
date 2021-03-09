@@ -35,10 +35,14 @@ router.post('/signup', (req, res, next) => {
     return;  
   }
 
+  //creating dateString
+  let date = new Date()
+  let currentDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
   // creating a salt 
   let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(password, salt);
-  UserModel.create({username: username.toLowerCase(), email, password: hash, city, country, intro, hobbies})
+  UserModel.create({username: username.toLowerCase(), email, password: hash, city, country, intro, hobbies, dateString: currentDate,})
     .then((user) => {
       // ensuring that we don't share the hash as well with the user
       user.password = "***";
