@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const uploader = require("../utils/cloudinary.config");
 const UserModel = require("../models/User.model");
+const EventsModel = require("../models/Events.model")
+const PostModel = require("../models/Post.model.js");
 
 router.get("/user/:userId", (req, res) => {
   UserModel.findById(req.params.userId)
@@ -8,6 +10,42 @@ router.get("/user/:userId", (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+router.get("/user/getpost/:userId", (req, res, next) => {
+  let user = req.params.userId;
+
+  PostModel.find({ userId: user })
+    // .populate("userId")
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+router.get("/user/getevent/:userId", (req, res, next) => {
+
+  let user = req.params.userId;
+
+  EventsModel.find({ userId: user })
+    .populate("userId")
+    .then((response) => {
+      console.log("hello");
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.log(err);
       res.status(500).json({
         errorMessage: "Something went wrong",
         message: err,
