@@ -13,7 +13,8 @@ const postSchema = new Schema({
     type: String,
   },
   tags: {
-    type: String
+    type: String,
+    default:""
   },
   picture: {
     type: String,
@@ -33,7 +34,11 @@ const postSchema = new Schema({
     ref: 'User',
     //required: true
   },
-  likes : Number,
+  // likes : Number,
+  userLikes:{
+    type: Array,
+    default: [],
+  },
   postStatus: {
     type: String,
     default: 'draft'

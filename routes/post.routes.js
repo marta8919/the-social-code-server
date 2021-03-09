@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const PostModel = require("../models/Post.model.js");
-
+const UserModel = require("../models/User.model")
 const EventsModel = require("../models/Events.model");
+const { response } = require("express");
 
 //Update Board
 router.get("/board/posts", (req, res, next) => {
@@ -45,6 +46,56 @@ router.get("/post/:postId", (req, res) => {
       });
     });
 });
+
+router.post("/post/like/:postId", (req, res) => {
+  let userId = req.session.loggedInUser._id
+  // console.log(userId)
+  PostModel.findByIdAndUpdate(req.params.postId, {$push:{userLikes: userId}})
+    .then((response) => {
+      UserModel.findByIdAndUpdate(userId, {$push:{likedPosts: req.params.postId}})
+        .then((response) => {
+          res.status(200).json(response)
+        })
+        .catch((err) => {
+          console.log('user not found')
+          res.status(500).json({
+            errorMessage: "Something went wrong",
+          });
+        });
+        
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+      });
+    });
+})
+
+router.post("/post/unlike/:postId", (req, res) => {
+  let userId = req.session.loggedInUser._id
+  // console.log(userId)
+  PostModel.findByIdAndUpdate(req.params.postId, {$pull:{userLikes: userId}})
+    .then((response) => {
+      UserModel.findByIdAndUpdate(userId, {$pull:{likedPosts: req.params.postId}})
+        .then((response) => {
+          res.status(200).json(response)
+        })
+        .catch((err) => {
+          console.log('user not found')
+          res.status(500).json({
+            errorMessage: "Something went wrong",
+          });
+        });
+        
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+      });
+    });
+})
 
 router.delete("/delete/:postId", (req, res) => {
   PostModel.findByIdAndDelete(req.params.postId)
