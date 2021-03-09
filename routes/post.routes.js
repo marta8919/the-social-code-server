@@ -124,6 +124,54 @@ router.get('/event/:eventId', (req, res) => {
    }) 
 })
 
+router.post("/event/register/:eventId", (req, res) => {
+  let userId = req.session.loggedInUser._id
+  EventsModel.findByIdAndUpdate(req.params.eventId, {$push:{registeredUsers: userId}})
+    .then((response) => {
+      UserModel.findByIdAndUpdate(userId, {$push:{registeredEvents: req.params.eventId}})
+        .then((response) => {
+          res.status(200).json(response)
+        })
+        .catch((err) => {
+          console.log(err)
+          res.status(500).json({
+            errorMessage: "Something went wrong",
+          });
+        });
+        
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+      });
+    });
+})
+
+router.post("/event/unsubscribe/:eventId", (req, res) => {
+  let userId = req.session.loggedInUser._id
+  EventsModel.findByIdAndUpdate(req.params.eventId, {$pull:{registeredUsers: userId}})
+    .then((response) => {
+      UserModel.findByIdAndUpdate(userId, {$pull:{registeredEvents: req.params.eventId}})
+        .then((response) => {
+          res.status(200).json(response)
+        })
+        .catch((err) => {
+          console.log(err)
+          res.status(500).json({
+            errorMessage: "Something went wrong",
+          });
+        });
+        
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+      });
+    });
+})
+
 //Edit Events
 router.patch("/event/edit/:id", (req, res) => {
   let id = req.params.id;

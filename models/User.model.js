@@ -41,6 +41,10 @@ const userSchema = new Schema({
     type: Array,
     default: [],
   },
+  registeredEvents: {
+    type: Array,
+    default: [],
+  },
 });
 
 const User = model("User", userSchema);
