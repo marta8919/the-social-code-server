@@ -34,7 +34,11 @@ const postSchema = new Schema({
     ref: 'User',
     //required: true
   },
-  likes : Number,
+  // likes : Number,
+  userLikes:{
+    type: Array,
+    default: [],
+  },
   postStatus: {
     type: String,
     default: 'draft'

@@ -37,6 +37,10 @@ const userSchema = new Schema({
     required: true
   },
   dateString: String,
+  likedPosts: {
+    type: Array,
+    default: [],
+  },
 });
 
 const User = model("User", userSchema);
