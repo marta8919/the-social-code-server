@@ -127,12 +127,17 @@ router.post("/publish", (req, res) => {
     return;
   }
 
+  let date = new Date()
+  let currentDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+
   PostModel.create({
     description,
     tags,
     picture,
     postStatus: "published",
     userId: req.session.loggedInUser._id,
+    dateString: currentDate,
   })
     .then((response) => {
       res.status(200).json(response);
