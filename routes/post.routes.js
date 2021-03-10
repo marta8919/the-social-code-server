@@ -129,8 +129,7 @@ router.post("/event/register/:eventId", (req, res) => {
   let user = req.session.loggedInUser
   EventsModel.findByIdAndUpdate(req.params.eventId, {$push:{registeredUsers: user}})
     .then((response) => {
-      UserModel.findByIdAndUpdate(user._id, {$push:{registeredEvents: response}})
-        .populate()
+      UserModel.findOneAndUpdate({ email: req.session.loggedInUser.email }, {$push:{registeredEvents: response}}, { new: true })
         .then((response) => {
           req.session.loggedInUser = response
           res.status(200).json(response)
@@ -155,7 +154,7 @@ router.post("/event/unsubscribe/:eventId", (req, res) => {
   let user = req.session.loggedInUser
   EventsModel.findByIdAndUpdate(req.params.eventId, {$pull:{registeredUsers: user}})
     .then((response) => {
-      UserModel.findByIdAndUpdate(user.id, {$pull:{registeredEvents: response}})
+      UserModel.findOneAndUpdate( { email: req.session.loggedInUser.email }, {$pull:{registeredEvents: response}}, { new: true })
         .then((response) => {
           req.session.loggedInUser = response
           res.status(200).json(response)
