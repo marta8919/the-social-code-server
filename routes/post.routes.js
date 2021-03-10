@@ -151,10 +151,10 @@ router.post("/event/register/:eventId", (req, res) => {
 })
 
 router.post("/event/unsubscribe/:eventId", (req, res) => {
-  let userId = req.session.loggedInUser._id
-  EventsModel.findByIdAndUpdate(req.params.eventId, {$pull:{registeredUsers: userId}})
+  let user = req.session.loggedInUser
+  EventsModel.findByIdAndUpdate(req.params.eventId, {$pull:{registeredUsers: user}})
     .then((response) => {
-      UserModel.findByIdAndUpdate(userId, {$pull:{registeredEvents: req.params.eventId}})
+      UserModel.findByIdAndUpdate(user.id, {$pull:{registeredEvents: response}})
         .then((response) => {
           res.status(200).json(response)
         })
