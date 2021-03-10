@@ -10,7 +10,7 @@ const CLIENT_ORIGIN = process.env.ORIGIN
 module.exports = {
 
   confirm: id => ({
-    subject: 'React Confirm Email',
+    subject: 'TSC confirmation email',
     html: `
       <a href='${CLIENT_ORIGIN}/confirm/${id}'>
         click to confirm email
