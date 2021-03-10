@@ -3,6 +3,7 @@ const PostModel = require("../models/Post.model.js");
 const UserModel = require("../models/User.model")
 const EventsModel = require("../models/Events.model");
 const { response } = require("express");
+const emailController = require('./email/email.controller')
 
 //Update Board
 router.get("/board/posts", (req, res, next) => {
@@ -316,6 +317,10 @@ router.get("/getevent", (req, res, next) => {
       });
     });
 });
+
+//email verification
+router.post('/email', emailController.collectEmail)
+router.get('/email/confirm/:id', emailController.confirmEmail)
 
 
 

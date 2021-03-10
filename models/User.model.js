@@ -45,6 +45,10 @@ const userSchema = new Schema({
     type: Array,
     default: [],
   },
+  confirmed:{
+    type: Boolean,
+    default: flase
+  }
 });
 
 const User = model("User", userSchema);
