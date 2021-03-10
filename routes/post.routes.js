@@ -126,10 +126,11 @@ router.get('/event/:eventId', (req, res) => {
 })
 
 router.post("/event/register/:eventId", (req, res) => {
-  let userId = req.session.loggedInUser._id
-  EventsModel.findByIdAndUpdate(req.params.eventId, {$push:{registeredUsers: userId}})
+  let user = req.session.loggedInUser
+  EventsModel.findByIdAndUpdate(req.params.eventId, {$push:{registeredUsers: user}})
     .then((response) => {
-      UserModel.findByIdAndUpdate(userId, {$push:{registeredEvents: req.params.eventId}})
+      UserModel.findByIdAndUpdate(user._id, {$push:{registeredEvents: response}})
+        .populate()
         .then((response) => {
           res.status(200).json(response)
         })
