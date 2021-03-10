@@ -1,5 +1,6 @@
 
-const { CLIENT_ORIGIN } = require('../config')
+const CLIENT_ORIGIN = process.env.ORIGIN
+
 
 // This file is exporting an Object with a single key/value pair.
 // However, because this is not a part of the logic of the application

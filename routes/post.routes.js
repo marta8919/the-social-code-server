@@ -3,7 +3,7 @@ const PostModel = require("../models/Post.model.js");
 const UserModel = require("../models/User.model")
 const EventsModel = require("../models/Events.model");
 const { response } = require("express");
-const emailController = require('./email/email.controller')
+const emailController = require('../email/email.controller')
 
 //Update Board
 router.get("/board/posts", (req, res, next) => {
