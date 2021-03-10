@@ -47,7 +47,7 @@ const userSchema = new Schema({
   },
   confirmed:{
     type: Boolean,
-    default: flase
+    default: false,
   }
 });
 
