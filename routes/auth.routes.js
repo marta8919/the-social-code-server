@@ -7,7 +7,6 @@ const templates = require('../email/email.templates')
 const msgs = require('../email/email.msgs')
 
 router.post('/signup', (req, res, next) => {
-  console.log("holi")
   const {username, email, password, password2, country, city, hobbies, intro} = req.body
 
   if (!username || !email || !password || !password2) {

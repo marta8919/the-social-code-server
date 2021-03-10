@@ -12,11 +12,13 @@ module.exports = {
   confirm: id => ({
     subject: 'React Confirm Email',
     html: `
-      <a href='${CLIENT_ORIGIN}/confirm/${id}'>
-        click to confirm email
-      </a>
+      Hello! <br></br>
+
+      please click <a href='${CLIENT_ORIGIN}/login'>here</a> to confirm your email address and get access to the full content of The Social Code 🥳 !
+
+      TSC Team
     `,      
-    text: `Copy and paste this link: ${CLIENT_ORIGIN}/confirm/${id}`
+    text: `Copy and paste this link: ${CLIENT_ORIGIN}/login`
   })
   
 }

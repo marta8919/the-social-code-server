@@ -306,7 +306,23 @@ router.get("/getevent", (req, res, next) => {
   EventsModel.find({ userId: user._id })
     .populate("userId")
     .then((response) => {
-      console.log("hello");
+
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        errorMessage: "Something went wrong",
+        message: err,
+      });
+    });
+});
+
+router.get("/getupcomingevent", (req, res, next) => {
+  let user = req.session.loggedInUser;
+
+  EventsModel.find({ userId: user._id })
+    .then((response) => {
       res.status(200).json(response);
     })
     .catch((err) => {
