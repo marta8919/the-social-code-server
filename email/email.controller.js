@@ -1,38 +1,5 @@
 const User = require('../models/User.model')
-const sendEmail = require('./email.send')
 const msgs = require('./email.msgs')
-const templates = require('./email.templates')
-
-// The callback that is invoked when the user submits the form on the client.
-exports.collectEmail = (req, res) => {
-  const { email } = req.body
-  
-  User.findOne({ email })
-    .then(user => {
-      
-      // We have a new user! Send them a confirmation email.
-      if (!user) {
-        User.create({ email })
-          .then(newUser => sendEmail(newUser.email, templates.confirm(newUser._id)))
-          .then(() => res.json({ msg: msgs.confirm }))
-          .catch(err => console.log(err))
-      }
-
-      // We have already seen this email address. But the user has not
-      // clicked on the confirmation link. Send another confirmation email.
-      else if (user && !user.confirmed) {
-        sendEmail(user.email, templates.confirm(user._id))
-          .then(() => res.json({ msg: msgs.resend }))
-      }
-
-      // The user has already confirmed this email address
-      else {
-        res.json({ msg: msgs.alreadyConfirmed })
-      }
-
-    })
-    .catch(err => console.log(err))
-}
 
 // The callback that is invoked when the user visits the confirmation
 // url on the client and a fetch request is sent in componentDidMount.

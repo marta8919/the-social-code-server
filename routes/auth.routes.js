@@ -2,8 +2,12 @@ const router = require("express").Router();
 const bcrypt = require('bcryptjs')
 const UserModel = require('../models/User.model.js')
 const PostModel = require('../models/Post.model')
+const sendEmail = require('../email/email.send')
+const templates = require('../email/email.templates')
+const msgs = require('../email/email.msgs')
 
 router.post('/signup', (req, res, next) => {
+  console.log("holi")
   const {username, email, password, password2, country, city, hobbies, intro} = req.body
 
   if (!username || !email || !password || !password2) {
@@ -42,24 +46,40 @@ router.post('/signup', (req, res, next) => {
   // creating a salt 
   let salt = bcrypt.genSaltSync(10);
   let hash = bcrypt.hashSync(password, salt);
-  UserModel.create({username: username.toLowerCase(), email, password: hash, city, country, intro, hobbies, dateString: currentDate,})
-    .then((user) => {
-      // ensuring that we don't share the hash as well with the user
-      user.password = "***";
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        res.status(500).json({
-          errorMessage: 'username or email entered already exists!',
-        });
-      } 
-      else {
-        res.status(500).json({
-          errorMessage: 'Something went wrong! Go to sleep!',
-        });
-      }
-    })
+
+  UserModel.findOne({email})
+   .then(user => {
+     if (!user){
+      UserModel.create({username: username.toLowerCase(), email, password: hash, city, country, intro, hobbies, dateString: currentDate,})
+      .then((user) => {
+        // ensuring that we don't share the hash as well with the user
+        user.password = "***";
+        sendEmail(user.email, templates.confirm(user._id));
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        if (err.code === 11000) {
+          res.status(500).json({
+            errorMessage: 'username or email entered already exists!',
+          });
+        } 
+        else {
+          res.status(500).json({
+            errorMessage: 'Something went wrong! Go to sleep!',
+          });
+        }
+      })
+
+     }
+     else if (user && !user.confirmed) {
+      sendEmail(user.email, templates.confirm(user._id))
+        .then(() => res.json({ msg: msgs.resend }))
+    }
+    else {
+      res.json({ msg: msgs.alreadyConfirmed })
+    }
+   })
+   .catch(err => console.log(err))
 
 })
 

@@ -319,7 +319,8 @@ router.get("/getevent", (req, res, next) => {
 });
 
 //email verification
-router.post('/email', emailController.collectEmail)
+router.get('/wake-up', (req, res) => res.json('👌'))
+// router.post('/email', emailController.collectEmail)
 router.get('/email/confirm/:id', emailController.confirmEmail)
 
 
