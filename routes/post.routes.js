@@ -105,6 +105,7 @@ router.delete("/delete/:postId", (req, res) => {
 });
 
 //Publish routes
+//this is a test to deploy
 router.post("/publish", uploader.single("imageUrl"), (req, res) => {
   let picturePath = "";
   req.file ? (picturePath = req.file.path) : (picturePath = "");
