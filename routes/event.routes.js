@@ -44,10 +44,12 @@ router.post("/event/register/:eventId", (req, res) => {
       UserModel.findByIdAndUpdate(user._id, {
         $push: { registeredEvents: response },
       })
-        .populate()
-        .then((response) => {
-          req.session.loggedInUser = response;
-          res.status(200).json(response);
+        .then(() => {
+          UserModel.findById(user._id).then((response) => {
+            console.log("see here", response);
+            req.session.loggedInUser = response;
+            res.status(200).json(response);
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -67,15 +69,18 @@ router.post("/event/register/:eventId", (req, res) => {
 router.post("/event/unsubscribe/:eventId", (req, res) => {
   let user = req.session.loggedInUser;
   EventsModel.findByIdAndUpdate(req.params.eventId, {
-    $pull: { registeredUsers: user },
+    $pull: { registeredUsers: { _id: user._id } },
   })
-    .then((response) => {
-      UserModel.findByIdAndUpdate(user.id, {
-        $pull: { registeredEvents: response },
+    .then(() => {
+      UserModel.findByIdAndUpdate(user._id, {
+        $pull: { registeredEvents: { _id: user._id } },
       })
-        .then((response) => {
-          req.session.loggedInUser = response;
-          res.status(200).json(response);
+        .then(() => {
+          UserModel.findById(user._id).then((response) => {
+            console.log("see here", response);
+            req.session.loggedInUser = response;
+            res.status(200).json(response);
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -210,6 +215,5 @@ router.get("/getupcomingevent", (req, res, next) => {
       });
     });
 });
-
 
 module.exports = router;
