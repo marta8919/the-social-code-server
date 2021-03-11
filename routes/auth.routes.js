@@ -193,7 +193,7 @@ router.get("/profile", (req, res) => {
 });
 
 //email verification
-router.get("/wake-up", (req, res) => res.json("👌"));
+// router.get("/wake-up", (req, res) => res.json("👌"));
 // router.post('/email', emailController.collectEmail)
 router.get("/email/confirm/:id", emailController.confirmEmail);
 
