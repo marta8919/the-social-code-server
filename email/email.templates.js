@@ -14,7 +14,7 @@ module.exports = {
     html: `
       Hello! <br></br>
 
-      please click <a href='${CLIENT_ORIGIN}/login'>here</a> to confirm your email address and get access to the full content of The Social Code 🥳 !
+      please click <a href='${CLIENT_ORIGIN}/confirm/${id}'>here</a> to confirm your email address and get access to the full content of The Social Code 🥳 !
 
       TSC Team
     `,      
