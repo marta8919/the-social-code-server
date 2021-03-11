@@ -72,22 +72,25 @@ router.post("/event/unsubscribe/:eventId", (req, res) => {
     $pull: { registeredUsers: { _id: user._id } },
   })
     .then(() => {
-      UserModel.findByIdAndUpdate(user._id, {
-        $pull: { registeredEvents: { _id: user._id } },
-      })
-        .then(() => {
-          UserModel.findById(user._id).then((response) => {
-            console.log("see here", response);
-            req.session.loggedInUser = response;
-            res.status(200).json(response);
-          });
+      EventsModel.findById(req.params.eventId)
+      .then((response) => {
+        console.log(response._id);
+        UserModel.findByIdAndUpdate(user._id, {
+          $pull: { registeredEvents: { _id: response._id } },
         })
-        .catch((err) => {
-          console.log(err);
-          res.status(500).json({
-            errorMessage: "Something went wrong",
+          .then(() => {
+            UserModel.findById(user._id).then((response) => {
+              req.session.loggedInUser = response;
+              res.status(200).json(response);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+              errorMessage: "Something went wrong",
+            });
           });
-        });
+      });
     })
     .catch((err) => {
       console.log(err);
